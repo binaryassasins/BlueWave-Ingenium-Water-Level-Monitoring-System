@@ -21,16 +21,17 @@ BlynkTimer timer;
 #define LED1 16  // Replace D0 with the correct GPIO number
 #define LED2 0   // Replace D3 with the correct GPIO number
 #define LED3 2   // Replace D4 with the correct GPIO number
-#define LED4 14  // Replace D5 with the correct GPIO number
+#define LED4 5  // Replace D5 with the correct GPIO number
 #define LED5 12  // Replace D6 with the correct GPIO number
+#define raindropDO 14
 #define relay 0
 //Enter your tank max value(CM)
 int MaxLevel = 20;
-int Level1 = (MaxLevel * 75) / 100;
-int Level2 = (MaxLevel * 65) / 100;
-int Level3 = (MaxLevel * 55) / 100;
-int Level4 = (MaxLevel * 45) / 100;
-int Level5 = (MaxLevel * 35) / 100;
+int Level1 = (MaxLevel * 85) / 100; //(MaxLevel * 75) / 100;
+int Level2 = (MaxLevel * 70) / 100; //(MaxLevel * 65) / 100;
+int Level3 = (MaxLevel * 50) / 100; //(MaxLevel * 55) / 100;
+int Level4 = (MaxLevel * 35) / 100; //(MaxLevel * 45) / 100;
+int Level5 = (MaxLevel * 25) / 100; //(MaxLevel * 35) / 100;
 void setup() {
   Serial.begin(9600);
   lcd.init();
@@ -43,6 +44,8 @@ void setup() {
   pinMode(LED4, OUTPUT);
   pinMode(LED5, OUTPUT);
   pinMode(relay, OUTPUT);
+  // raindrop calibration
+  pinMode(raindropDO, INPUT);
   digitalWrite(relay, HIGH);
   Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
   lcd.setCursor(0, 0);
@@ -71,6 +74,7 @@ void ultrasonic() {
   }
   lcd.setCursor(0, 0);
   lcd.print("Level:");
+  lcd.print("                ");
   if (Level1 <= distance) {
     lcd.setCursor(8, 0);
     lcd.print("Very Low");
@@ -132,7 +136,15 @@ BLYNK_WRITE(V1) {
 }
 
 // Rain sensor module calibration -> retrieve the value to force shut down water pump
-// void raindrops() {} 
+void raindrops() {
+  int raindropState = digitalRead(raindropDO);
+
+  if (raindropState == HIGH) {
+    lcd.setCursor(0, 1);
+    lcd.print("Leak");
+  }
+} 
+
 
 void loop() {
   Blynk.run();//Run the Blynk library
