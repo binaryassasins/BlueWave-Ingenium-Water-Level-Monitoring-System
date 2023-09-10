@@ -18,13 +18,10 @@ BlynkTimer timer;
 // Define the component pins
 #define trig 13   // Replace D7 with the correct GPIO number
 #define echo 15   // Replace D8 with the correct GPIO number
-#define LED1 16  // Replace D0 with the correct GPIO number
-#define LED2 0   // Replace D3 with the correct GPIO number
-#define LED3 2   // Replace D4 with the correct GPIO number
-#define LED4 5  // Replace D5 with the correct GPIO number
-#define LED5 12  // Replace D6 with the correct GPIO number
 #define raindropDO 14
-#define relay 0
+#define relay 12
+// change the relay state via blynk
+bool Relay;
 //Enter your tank max value(CM)
 int MaxLevel = 20;
 int Level1 = (MaxLevel * 85) / 100; //(MaxLevel * 75) / 100;
@@ -38,15 +35,10 @@ void setup() {
   lcd.backlight();
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(LED3, OUTPUT);
-  pinMode(LED4, OUTPUT);
-  pinMode(LED5, OUTPUT);
   pinMode(relay, OUTPUT);
   // raindrop calibration
   pinMode(raindropDO, INPUT);
-  digitalWrite(relay, HIGH);
+  digitalWrite(relay, HIGH); //digitalWrite(relay, HIGH)
   Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
   lcd.setCursor(0, 0);
   lcd.print("Water level");
@@ -54,8 +46,14 @@ void setup() {
   lcd.print("Monitoring");
   delay(4000);
   lcd.clear();
+  lcd.print("BlueWave");
+  lcd.setCursor(4, 1);
+  lcd.print("Ingenium");
+  delay(4000);
+  lcd.clear();
   //Call the functions
   timer.setInterval(100L, ultrasonic);
+  raindrops();
 }
 //Get the ultrasonic sensor values
 void ultrasonic() {
@@ -78,73 +76,100 @@ void ultrasonic() {
   if (Level1 <= distance) {
     lcd.setCursor(8, 0);
     lcd.print("Very Low");
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, LOW);
-    digitalWrite(LED3, LOW);
-    digitalWrite(LED4, LOW);
-    digitalWrite(LED5, LOW);
+    digitalWrite(relay, LOW);
+    lcd.setCursor(0, 1);
+    lcd.print("Pump is ON ");
+    lcd.print("               ");
+    delay(1500);
+    lcd.setCursor(0, 1);
+    lcd.print(raindrops());
+    lcd.print("               ");
+    delay(1500);
   } else if (Level2 <= distance && Level1 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("Low");
     lcd.print(" ");
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(LED3, LOW);
-    digitalWrite(LED4, LOW);
-    digitalWrite(LED5, LOW);
+    digitalWrite(relay, LOW);
+    lcd.setCursor(0, 1);
+    lcd.print("Pump is ON ");
+    lcd.print("               ");
+    delay(1500);
+    lcd.setCursor(0, 1);
+    lcd.print(raindrops());
+    lcd.print("               ");
+    delay(1500);
   } else if (Level3 <= distance && Level2 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("Medium");
     lcd.print(" ");
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(LED3, HIGH);
-    digitalWrite(LED4, LOW);
-    digitalWrite(LED5, LOW);
+    digitalWrite(relay, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("Pump is OFF ");
+    lcd.print("               ");
+    delay(1500);
+    lcd.setCursor(0, 1);
+    lcd.print(raindrops());
+    lcd.print("               ");
+    delay(1500);
   } else if (Level4 <= distance && Level3 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("High");
     lcd.print(" ");
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(LED3, HIGH);
-    digitalWrite(LED4, HIGH);
-    digitalWrite(LED5, LOW);
+    digitalWrite(relay, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("Pump is OFF ");
+    lcd.print("               ");
+    delay(1500);
+    lcd.setCursor(0, 1);
+    lcd.print(raindrops());
+    lcd.print("               ");
+    delay(1500);
   } else if (Level5 >= distance) {
     lcd.setCursor(8, 0);
     lcd.print("Full");
     lcd.print(" ");
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(LED3, HIGH);
-    digitalWrite(LED4, HIGH);
-    digitalWrite(LED5, HIGH);
+    digitalWrite(relay, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("Pump is OFF ");
+    lcd.print("               ");
+    delay(1500);
+    lcd.setCursor(0, 1);
+    lcd.print(raindrops());
+    lcd.print("               ");
+    delay(1500);
   }
 }
 //Get the button value
 BLYNK_WRITE(V1) {
-  bool Relay = param.asInt();
+  Relay = param.asInt();
   if (Relay == 1) {
-    digitalWrite(relay, LOW);
-    lcd.setCursor(0, 1);
-    lcd.print("Motor is ON ");
+    digitalWrite(relay, LOW); // digitalWrite(relay, LOW)
+    //lcd.setCursor(0, 1);
+    //lcd.print("Motor is ON ");
+    //lcd.print("                 ");
   } else {
-    digitalWrite(relay, HIGH);
-    lcd.setCursor(0, 1);
-    lcd.print("Motor is OFF");
-    }
+    digitalWrite(relay, HIGH); // digitalWrite(relay, HIGH)
+    //lcd.setCursor(0, 1);
+    //lcd.print("Motor is OFF");
+    //lcd.print("                 ");
+  }
 }
 
 // Rain sensor module calibration -> retrieve the value to force shut down water pump
-void raindrops() {
+const char* raindrops() {
   int raindropState = digitalRead(raindropDO);
-
-  if (raindropState == HIGH) {
-    lcd.setCursor(0, 1);
-    lcd.print("Leak");
+  const char* stateText;
+  if (raindropState == LOW) {
+    Blynk.virtualWrite(V2, "Leak Detected!");
+    stateText = "Leak Detected!";
+    // suspend auto pump
+    digitalWrite(relay, LOW);
+  } else {
+    Blynk.virtualWrite(V2, "No Leak Detected.");
+    stateText = "No Leak Detected.";
   }
+  return stateText;
 } 
-
 
 void loop() {
   Blynk.run();//Run the Blynk library
