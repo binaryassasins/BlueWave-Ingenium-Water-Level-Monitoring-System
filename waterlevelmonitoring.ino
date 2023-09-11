@@ -76,82 +76,138 @@ void ultrasonic() {
   if (Level1 <= distance) {
     lcd.setCursor(8, 0);
     lcd.print("Very Low");
-    digitalWrite(relay, LOW);
-    lcd.setCursor(0, 1);
-    lcd.print("Pump is ON ");
-    lcd.print("               ");
-    delay(1500);
-    lcd.setCursor(0, 1);
-    lcd.print(raindrops());
-    lcd.print("               ");
-    delay(1500);
+    lcd.print(" ");
+    if (raindrops() == "No Leak Detected.") {
+      digitalWrite(relay, LOW);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is ON ");
+      Blynk.virtualWrite(V3, HIGH);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } else if (raindrops() == "Leak Detected!") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } 
   } else if (Level2 <= distance && Level1 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("Low");
     lcd.print(" ");
-    digitalWrite(relay, LOW);
-    lcd.setCursor(0, 1);
-    lcd.print("Pump is ON ");
-    lcd.print("               ");
-    delay(1500);
-    lcd.setCursor(0, 1);
-    lcd.print(raindrops());
-    lcd.print("               ");
-    delay(1500);
+    if (raindrops() == "No Leak Detected.") {
+      digitalWrite(relay, LOW);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is ON ");
+      Blynk.virtualWrite(V3, HIGH);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } else if (raindrops() == "Leak Detected!") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    }
   } else if (Level3 <= distance && Level2 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("Medium");
     lcd.print(" ");
-    digitalWrite(relay, HIGH);
-    lcd.setCursor(0, 1);
-    lcd.print("Pump is OFF ");
-    lcd.print("               ");
-    delay(1500);
-    lcd.setCursor(0, 1);
-    lcd.print(raindrops());
-    lcd.print("               ");
-    delay(1500);
+    if (raindrops() == "No Leak Detected.") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } else if (raindrops() == "Leak Detected!") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    }
   } else if (Level4 <= distance && Level3 > distance) {
     lcd.setCursor(8, 0);
     lcd.print("High");
     lcd.print(" ");
-    digitalWrite(relay, HIGH);
-    lcd.setCursor(0, 1);
-    lcd.print("Pump is OFF ");
-    lcd.print("               ");
-    delay(1500);
-    lcd.setCursor(0, 1);
-    lcd.print(raindrops());
-    lcd.print("               ");
-    delay(1500);
+    if (raindrops() == "No Leak Detected.") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } else if (raindrops() == "Leak Detected!") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    }
   } else if (Level5 >= distance) {
     lcd.setCursor(8, 0);
     lcd.print("Full");
     lcd.print(" ");
-    digitalWrite(relay, HIGH);
-    lcd.setCursor(0, 1);
-    lcd.print("Pump is OFF ");
-    lcd.print("               ");
-    delay(1500);
-    lcd.setCursor(0, 1);
-    lcd.print(raindrops());
-    lcd.print("               ");
-    delay(1500);
-  }
-}
-//Get the button value
-BLYNK_WRITE(V1) {
-  Relay = param.asInt();
-  if (Relay == 1) {
-    digitalWrite(relay, LOW); // digitalWrite(relay, LOW)
-    //lcd.setCursor(0, 1);
-    //lcd.print("Motor is ON ");
-    //lcd.print("                 ");
-  } else {
-    digitalWrite(relay, HIGH); // digitalWrite(relay, HIGH)
-    //lcd.setCursor(0, 1);
-    //lcd.print("Motor is OFF");
-    //lcd.print("                 ");
+    if (raindrops() == "No Leak Detected.") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    } else if (raindrops() == "Leak Detected!") {
+      digitalWrite(relay, HIGH);
+      lcd.setCursor(0, 1);
+      lcd.print("Pump is OFF ");
+      Blynk.virtualWrite(V3, LOW);
+      lcd.print("               ");
+      delay(1500);
+      lcd.setCursor(0, 1);
+      lcd.print(raindrops());
+      lcd.print("               ");
+      delay(1500);
+    }
   }
 }
 
@@ -163,10 +219,11 @@ const char* raindrops() {
     Blynk.virtualWrite(V2, "Leak Detected!");
     stateText = "Leak Detected!";
     // suspend auto pump
-    digitalWrite(relay, LOW);
+    //digitalWrite(relay, HIGH);
   } else {
     Blynk.virtualWrite(V2, "No Leak Detected.");
     stateText = "No Leak Detected.";
+    //digitalWrite(relay, LOW);
   }
   return stateText;
 } 
