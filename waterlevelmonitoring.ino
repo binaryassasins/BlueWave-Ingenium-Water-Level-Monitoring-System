@@ -5,15 +5,15 @@ https://github.com/binaryassasins
 //Include the library files
 #include <LiquidCrystal_I2C.h>
 #define BLYNK_PRINT Serial
-#define BLYNK_TEMPLATE_ID "TMPL36NWPZej"
-#define BLYNK_TEMPLATE_NAME "Water Level Monitoring System"
+#define BLYNK_TEMPLATE_ID "aaa"
+#define BLYNK_TEMPLATE_NAME "bbb"
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 //Initialize the LCD display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-char auth[] = "xEu-8YMNt42vj_lXohByTE7N0LPM5HIK";//Enter your Auth token
-char ssid[] = "SITIHOME@unifi";//Enter your WIFI name
-char pass[] = "0392813931def";//Enter your WIFI password
+char auth[] = "xxx";//Enter your Auth token
+char ssid[] = "yyy";//Enter your WIFI name
+char pass[] = "zzz";//Enter your WIFI password
 BlynkTimer timer;
 // Define the component pins
 #define trig 13   // Replace D7 with the correct GPIO number
