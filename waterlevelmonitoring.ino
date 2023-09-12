@@ -20,8 +20,6 @@ BlynkTimer timer;
 #define echo 15   // Replace D8 with the correct GPIO number
 #define raindropDO 14
 #define relay 12
-// change the relay state via blynk
-bool Relay;
 //Enter your tank max value(CM)
 int MaxLevel = 20;
 int Level1 = (MaxLevel * 85) / 100; //(MaxLevel * 75) / 100;
